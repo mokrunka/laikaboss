@@ -20,7 +20,7 @@
 ########################################
 
 import os, sys
-import zlib, cPickle as pickle
+import zlib, pickle
 import logging
 from random import randint
 import json
@@ -34,7 +34,7 @@ REQ_TYPE_PICKLE_ZLIB = '2'
 
 def dispositionFromResult(result):
     '''
-    This function examines the DISPOSITIONER module metadata in the scan results 
+    This function examines the DISPOSITIONER module metadata in the scan results
     to determine disposition.
     '''
     try:
@@ -62,10 +62,10 @@ def finalDispositionFromResult(result):
 def getAttachmentList(result):
     children = []
     rootObject = None
-    for uid, scanObject in result.files.iteritems():
+    for uid, scanObject in result.files.items():
         if not scanObject.parent:
             rootObject = uid
-    for uid, scanObject in result.files.iteritems():
+    for uid, scanObject in result.files.items():
         if scanObject.parent == rootObject:
             if scanObject.filename:
                 children.append(scanObject.filename)
@@ -83,7 +83,7 @@ def flagRollup(result):
     A sorted/unique list of all flags in the result
     '''
     flag_rollup = [] 
-    for id, scanObject in result.files.iteritems():
+    for id, scanObject in result.files.items():
         flag_rollup.extend(scanObject.flags)
     flag_rollup = set(flag_rollup)
     return sorted(flag_rollup)
@@ -129,7 +129,7 @@ def getJSON(result):
     # scan. The list will contain all of the buffers that were exploded from
     # a root buffer's scan in the order they were processed.
     buffer_results = [None] * len(result.files)
-    for scan_object in result.files.itervalues():
+    for scan_object in result.files.values():
         # Do not damage the original result -> clone
         buffer_result = clone_object(scan_object.__dict__)
         # Don't log buffers here, just metadata
@@ -157,7 +157,7 @@ class Client:
     _USE_SSH = None
     _REQUEST_TYPE = None
     
-    def __init__(self, brokerHost, context=None, useSSH=False, sshHost=None, async=False, useGevent=False, requestType=REQ_TYPE_PICKLE_ZLIB):
+    def __init__(self, brokerHost, context=None, useSSH=False, sshHost=None, _ASYNC=False, useGevent=False, requestType=REQ_TYPE_PICKLE_ZLIB):
 
         # Initialize Attributes
         if useGevent:
@@ -173,7 +173,7 @@ class Client:
         self._USE_SSH = useSSH
         self._POLL = zmq.Poller()
         self._ID = randint(1,999)
-        self._ASYNC = async
+        self._ASYNC = _ASYNC
         self._REQUEST_TYPE = requestType
 
         if context is not None:
@@ -325,7 +325,7 @@ class Client:
             return result
 
         except KeyboardInterrupt:
-            print "Interrupted by user, exiting..."
+            print("Interrupted by user, exiting...")
             sys.exit()
         except:
             raise
