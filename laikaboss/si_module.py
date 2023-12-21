@@ -15,7 +15,7 @@
 import sys
 import traceback
 import time
-import logging, syslog
+import logging, syslog2
 from laikaboss import config
 from interruptingcow import timeout
 from objectmodel import GlobalModuleTimeoutError, GlobalScanTimeoutError, QuitScanException
