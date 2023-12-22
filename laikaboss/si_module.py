@@ -18,7 +18,7 @@ import time
 import logging, syslog2
 from laikaboss import config
 from interruptingcow import timeout
-from objectmodel import GlobalModuleTimeoutError, GlobalScanTimeoutError, QuitScanException
+from laikaboss.objectmodel import GlobalModuleTimeoutError, GlobalScanTimeoutError, QuitScanException
 from laikaboss.util import log_module, get_option, log_module_error, get_scanObjectUID, getRootObject
 
 

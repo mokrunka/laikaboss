@@ -13,25 +13,29 @@
 # limitations under the License.
 # 
 import os
-import syslog
+import logging
 import traceback
 import sys
 import logging
 from laikaboss.objectmodel import QuitScanException, \
                                 GlobalScanTimeoutError, GlobalModuleTimeoutError
 
-# This block of code looks for all py files in the current directory
+# This block of code looks for all .py files in the current directory
 # and imports the class with the same name (except uppercase) as the file.
 # This ensures that the dispatcher can access every module in this folder without 
 # any further configuration needed.
+
+
 def log_debug(message):
-    syslog.syslog(syslog.LOG_DEBUG, "DEBUG %s" % message)
+    logging.debug(message)
 
 for module in os.listdir(os.path.dirname(__file__)):
+    print(os.path.dirname(__file__))
+    print(os.getcwd())
     try:
         if module == '__init__.py' or module[-3:] != '.py':
             continue
-        _temp = __import__(module[:-3], locals(), globals(), [module[:-3].upper()], -1)
+        _temp = __import__(module[:-3], locals(), globals(), [module[:-3].upper()], 0)
         globals()[module[:-3].upper()] = getattr(_temp, module[:-3].upper())
     except (QuitScanException, GlobalScanTimeoutError, GlobalModuleTimeoutError):
         raise
@@ -41,4 +45,4 @@ for module in os.listdir(os.path.dirname(__file__)):
         log_debug("Import Exception for %s module: %s" % (module ,repr(traceback.format_exception(exc_type, exc_value, exc_traceback))))
         continue
 del module
-del _temp
+# del _temp
